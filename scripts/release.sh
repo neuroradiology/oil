@@ -53,4 +53,15 @@ publish-doc() {
   echo "Visit https://www.oilshell.org/doc/$OIL_VERSION/"
 }
 
+publish-release() {
+  local user=$1
+  local host=$2
+
+  rsync --archive --verbose \
+    _release/oil-$OIL_VERSION.tar.* \
+    "$user@$host:oilshell.org/download/"
+
+  echo "Visit https://www.oilshell.org/download/"
+}
+
 "$@"
