@@ -94,10 +94,13 @@ OTHER SHELL SUBLANGUAGES
                   arith-logical not a and b
                   bitwise       ~a ^ b   This might change
                   arith-assign  set a *= 2
+                  table-expr    t[name == 'foo',age]
+                  list-expr     mylist[1:2]
+                  set-expr      a .| b, a .& b
                   fs-expr       test(:f)
                   comprehension [x for x in range(3) if x % 2 == 0]
-                                {x: 1 for a in range(3)}
-                                Set {x for a in range(3)}
+                                {x: 1 for x in range(3)}
+                                Set {x for x in range(3)}
   [Patterns]      glob          *.py
                   X extglob     @glob[*.py *.sh]
                   regex         (foo ~ [a-z]+)
@@ -119,6 +122,8 @@ X [Word Lookup]   command   builtin
 X [Introspection] help   hash   type   caller
 X [Interactive]   bind   history   fc
 X [External]      test  [ $a = $b ]
+                  printf  kill
+                  env
   [Compat Only]   pushd   popd   dirs
 
 SHELL OPTIONS
