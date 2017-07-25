@@ -48,9 +48,8 @@ OIL EXTENSIONS
   [Data Frames]   Literals and Operators
   [Pipelines]     nonlinear graph {}  structured-data |>
   [Modules]       use  (static modules)
-  [Other Tools]   fs-expr -- like find
+  [Other Tools]   
                   parallel -- like xargs
-  [Wok]           begin  end  when  -- like awk
   [Boil]          rule -- like make
   [Data Types]    Bool  Int  Float  Str (utf-8 or bytes)
                   Array<Int>  Array<Float>  Array<Str>
@@ -58,6 +57,11 @@ OIL EXTENSIONS
                   Dict
                   Table<...>
                   Null
+
+PATTERN ACTION EXTENSIONS
+  [Wok]           begin  end  when  -- like awk
+                  fs-expr -- like find, awk over FS metadata
+                  flagparse  -- some kind of block syntax
 
 LIBRARIES
   [Files]         fd = open('foo.txt', 'w')  # replacement for exec {fd}>foo.txt
@@ -84,6 +88,8 @@ WORD LANGUAGE
 OTHER SHELL SUBLANGUAGES
   [Expression]    arith-intro   Contexts where math is allowed
                   num-literals  0xFF  0755  etc.
+                                powers of 2  Ki  Mi  Gi  Ti
+                                powers of 10  K  M G  T  (not confused with true)
                   math          1 + 2*3
                   arith-logical not a and b
                   bitwise       ~a ^ b   This might change
