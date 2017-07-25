@@ -22,10 +22,11 @@ COMMAND LANGUAGE
                   block-redir      redir > /dev/null then !2 > !1 { ls / }
                   here-doc  << >>
                   desc !0 !1 !2 !stdin !stdout !stderr
+                  feed (pass?)  (for left to right syntax)
   [Other]         expr (   time   coproc
 
 ASSIGNING VARIABLES
-  [Keywords]      var  const   set   unset  export
+  [Keywords]      var  const   set   setglobal   unset  export
                   shift  # for compatibility
   [Operators]     assign        str = 'xyz'
                   X append      str += 'abc'  array += [c d]
@@ -43,7 +44,6 @@ ASSIGNING VARIABLES
 
 OIL EXTENSIONS
   [Functions]     func
-                  types Int  Float  Str  Array<Int>  Array<Float>  Array<Str>
   [Blocks]        cd {}  redir {}  with {}
   [Data Frames]   Literals and Operators
   [Pipelines]     nonlinear graph {}  structured-data |>
@@ -52,6 +52,12 @@ OIL EXTENSIONS
                   parallel -- like xargs
   [Wok]           begin  end  when  -- like awk
   [Boil]          rule -- like make
+  [Data Types]    Bool  Int  Float  Str (utf-8 or bytes)
+                  Array<Int>  Array<Float>  Array<Str>
+                  List  heterogeneous, for JSON
+                  Dict
+                  Table<...>
+                  Null
 
 LIBRARIES
   [Files]         fd = open('foo.txt', 'w')  # replacement for exec {fd}>foo.txt
