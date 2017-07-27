@@ -6,7 +6,8 @@ Oil Quick Reference
 
 INTRO
   [Overview]      overview   cmd-vs-expr
-  [Usage]         ovm-usage  oil-usage   config   startup   line-editing
+  [Usage]         ovm-usage   oil-usage   config   startup   line-editing
+                  prompt
 
 COMMAND LANGUAGE
   [Commands]      simple-command   semicolon ;
