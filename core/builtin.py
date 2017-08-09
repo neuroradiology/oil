@@ -501,6 +501,7 @@ def AddOptionsToArgSpec(spec):
   spec.Option('n', 'noexec')
   spec.Option('u', 'nounset')
   spec.Option('x', 'xtrace')
+  spec.Option('f', 'noglob')
   spec.Option(None, 'pipefail')
 
   spec.Option(None, 'debug-completion')

@@ -67,6 +67,8 @@ def _GlobUnescape(s):  # used by cmd_exec
 
 class Globber:
   def __init__(self, exec_opts):
+    self.exec_opts = exec_opts
+
     # TODO: separate into set_opts.glob_opts, and sh_opts.glob_opts?  Only if
     # other shels use the same options as bash though.
 
@@ -89,6 +91,12 @@ class Globber:
     # - Include globstar since I use it, and zsh has it.
 
   def Expand(self, arg):
+    """
+    Given a glob string, return a list of strings.
+    """
+    if self.exec_opts.noglob:
+      return [arg]
+
     # TODO: Only try to glob if there are any glob metacharacters.
     # Or maybe it is a conservative "avoid glob" heuristic?
     #
@@ -114,5 +122,6 @@ class Globber:
     if g:
       return g
     else:
+      # No match
       u = _GlobUnescape(arg)
       return [u]
