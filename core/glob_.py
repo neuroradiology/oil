@@ -21,20 +21,21 @@ def LooksLikeGlob(s):
 
   Still need this for slow path / fast path of prefix/suffix/patsub ops.
   """
-  import re
-  if re.match('^[a-z0-9=\-\.]+$', s):
-    #log('%r not glob', s)
-    return False
-  return True
-  # TODO: Only try to glob if there are any glob metacharacters.
-  # Or maybe it is a conservative "avoid glob" heuristic?
-  #
-  # Non-glob but with glob characters:
-  # echo ][
-  # echo []  # empty
-  # echo []LICENSE  # empty
-  # echo [L]ICENSE  # this one is good
-  # So yeah you need to test the validity somehow.
+  left_bracket = False
+  i = 0
+  n = len(s)
+  while i < n:
+    c = s[i]
+    if c == '\\':
+      i += 1
+    elif c == '*' or c == '?':
+      return True
+    elif c == '[':
+      left_bracket = True
+    elif c == ']' and left_bracket:
+      return True
+    i += 1
+  return False
 
 
 # Glob Helpers for WordParts.
@@ -105,7 +106,8 @@ class Globber:
     """Given a string that could be a glob, return a list of strings."""
     # e.g. don't glob 'echo' because it doesn't look like a glob
     if not LooksLikeGlob(arg):
-      return [arg]
+      u = _GlobUnescape(arg)
+      return [u]
     if self.exec_opts.noglob:
       return [arg]
 
