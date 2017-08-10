@@ -8,7 +8,7 @@ import libc
 from core.util import log
 
 
-def LooksLikeGlob():
+def LooksLikeGlob(s):
   """
   TODO: Reference lib/glob /   glob_pattern functions in bash
   grep glob_pattern lib/glob/*
@@ -21,7 +21,10 @@ def LooksLikeGlob():
 
   Still need this for slow path / fast path of prefix/suffix/patsub ops.
   """
-  pass
+  import re
+  if re.match('[a-z]+', s):
+    return False
+  return True
 
 
 # Glob Helpers for WordParts.
@@ -91,6 +94,9 @@ class Globber:
     """
     Given a glob string, return a list of strings.
     """
+    # e.g. don't glob 'echo' because it doesn't look like a glob
+    if not LooksLikeGlob(arg):
+      return [arg]
     if self.exec_opts.noglob:
       return [arg]
 
@@ -118,11 +124,9 @@ class Globber:
 
     if g:
       return g
-    else:  # No match
-      # TODO: Have to know if it's a glob!  LooksLikeGlob.
-      # Otherwise 'echo' fails to match anything and doesn't get included!
-      if self.exec_opts.nullglob:
-        raise NotImplementedError
+    else:  # Nothing matched
+      if self.exec_opts.nullglob: 
+        return []
       else:
         # Return the original string
         u = _GlobUnescape(arg)
