@@ -22,7 +22,8 @@ def LooksLikeGlob(s):
   Still need this for slow path / fast path of prefix/suffix/patsub ops.
   """
   import re
-  if re.match('^[a-z]+$', s):
+  if re.match('^[a-z0-9=\-\.]+$', s):
+    #log('%r not glob', s)
     return False
   return True
   # TODO: Only try to glob if there are any glob metacharacters.
