@@ -606,9 +606,9 @@ def Shopt(argv, exec_opts):
     raise NotImplementedError  # Display options
 
   for opt_name in argv[i:]:
-    if opt_name not in ('nullglob',):
+    if opt_name not in ('nullglob', 'failglob'):
       raise args.UsageError('shopt: Invalid option %r' % opt_name)
-    exec_opts.nullglob = b
+    setattr(exec_opts, opt_name, b)
 
   return 0
 

@@ -77,6 +77,7 @@ class ExecOpts(object):
 
     # shopt -s / -u
     self.nullglob = False 
+    self.failglob = False 
 
     # OSH-specific
     self.strict_arith = False  # e.g. $(( x )) where x doesn't look like integer

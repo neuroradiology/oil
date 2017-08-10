@@ -93,7 +93,6 @@ class Globber:
 
     # shopt: why the difference?  No command line switch I guess.
     self.dotglob = False  # dotfiles are matched
-    self.failglob = False  # no matches is an error
     self.globstar = False  # ** for directories
     # globasciiranges - ascii or unicode char classes (unicode by default)
     # nocaseglob
@@ -125,6 +124,9 @@ class Globber:
     if g:
       return g
     else:  # Nothing matched
+      if self.exec_opts.failglob: 
+        # TODO: Make the command return status 1.
+        raise NotImplementedError
       if self.exec_opts.nullglob: 
         return []
       else:

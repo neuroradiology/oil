@@ -157,6 +157,14 @@ argv.py _tmp/spec-tmp/*.nonexistent
 # stdout-json: "['_tmp/spec-tmp/*.nonexistent']\n[]\n"
 # N-I dash/mksh/ash stdout-json: "['_tmp/spec-tmp/*.nonexistent']\n['_tmp/spec-tmp/*.nonexistent']\n"
 
+### shopt -s failglob
+argv.py *.ZZ
+shopt -s failglob
+argv.py *.ZZ  # nothing is printed, not []
+echo status=$?
+# stdout-json: "['*.ZZ']\nstatus=1\n"
+# N-I dash/mksh/ash stdout-json: "['*.ZZ']\n['*.ZZ']\nstatus=0\n"
+
 ### Don't glob flags on file system with GLOBIGNORE
 # This is a bash-specific extension.
 expr $0 : '.*/osh$' >/dev/null && exit 99  # disabled until cd implemented
