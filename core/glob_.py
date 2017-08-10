@@ -76,15 +76,12 @@ class Globber:
     # Could a default GLOBIGNORE to ignore flags on the file system be part of
     # the security solution?  It doesn't seem totally sound.
 
-    self.noglob = False  # set -f
-
     # shopt: why the difference?  No command line switch I guess.
     self.dotglob = False  # dotfiles are matched
     self.failglob = False  # no matches is an error
     self.globstar = False  # ** for directories
     # globasciiranges - ascii or unicode char classes (unicode by default)
     # nocaseglob
-    self.nullglob = False  # no matches evaluates to empty, otherwise
     # extglob: the !() syntax
 
     # TODO: Figure out which ones are in other shells, and only support those?
@@ -109,19 +106,24 @@ class Globber:
 
     try:
       #g = glob.glob(arg)  # Bad Python glob
-      # PROBLEM: / is significant and can't be escaped!  Hav eto avoid globbing it.
+      # PROBLEM: / is significant and can't be escaped!  Have to avoid
+      # globbing it.
       g = libc.glob(arg)
     except Exception as e:
       # - [C\-D] is invalid in Python?  Regex compilation error.
       # - [:punct:] not supported
       print("Error expanding glob %r: %s" % (arg, e))
       raise
-    #print('G', arg, g)
+    #log('glob %r -> %r', arg, g)
 
-    #log('Globbing %s', arg)
     if g:
       return g
-    else:
-      # No match
-      u = _GlobUnescape(arg)
-      return [u]
+    else:  # No match
+      # TODO: Have to know if it's a glob!  LooksLikeGlob.
+      # Otherwise 'echo' fails to match anything and doesn't get included!
+      if self.exec_opts.nullglob:
+        raise NotImplementedError
+      else:
+        # Return the original string
+        u = _GlobUnescape(arg)
+        return [u]
