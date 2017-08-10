@@ -22,9 +22,18 @@ def LooksLikeGlob(s):
   Still need this for slow path / fast path of prefix/suffix/patsub ops.
   """
   import re
-  if re.match('[a-z]+', s):
+  if re.match('^[a-z]+$', s):
     return False
   return True
+  # TODO: Only try to glob if there are any glob metacharacters.
+  # Or maybe it is a conservative "avoid glob" heuristic?
+  #
+  # Non-glob but with glob characters:
+  # echo ][
+  # echo []  # empty
+  # echo []LICENSE  # empty
+  # echo [L]ICENSE  # this one is good
+  # So yeah you need to test the validity somehow.
 
 
 # Glob Helpers for WordParts.
@@ -44,10 +53,15 @@ def GlobEscape(s):
   return escaped
 
 
-# TODO: Can probably get rid of this, as long as you save the original word.
 def _GlobUnescape(s):  # used by cmd_exec
-  """
-  If there is no glob match, just unescape the string.
+  """Remove glob escaping from a string.
+  
+  Used when there is no glob match.
+  TODO: Can probably get rid of this, as long as you save the original word.
+
+  Complicated example: 'a*b'*.py, which will be escaped to a\*b*.py.  So in
+  word_eval _JoinElideEscape and EvalWordToString you have to build two
+  'parallel' strings -- one escaped and one not.
   """
   unescaped = ''
   i = 0
@@ -72,12 +86,9 @@ class Globber:
   def __init__(self, exec_opts):
     self.exec_opts = exec_opts
 
-    # TODO: separate into set_opts.glob_opts, and sh_opts.glob_opts?  Only if
-    # other shels use the same options as bash though.
-
-    # NOTE: Bash also respects the GLOBIGNORE variable, but no other shells do.
-    # Could a default GLOBIGNORE to ignore flags on the file system be part of
-    # the security solution?  It doesn't seem totally sound.
+    # NOTE: Bash also respects the GLOBIGNORE variable, but no other shells
+    # do.  Could a default GLOBIGNORE to ignore flags on the file system be
+    # part of the security solution?  It doesn't seem totally sound.
 
     # shopt: why the difference?  No command line switch I guess.
     self.dotglob = False  # dotfiles are matched
@@ -91,24 +102,12 @@ class Globber:
     # - Include globstar since I use it, and zsh has it.
 
   def Expand(self, arg):
-    """
-    Given a glob string, return a list of strings.
-    """
+    """Given a string that could be a glob, return a list of strings."""
     # e.g. don't glob 'echo' because it doesn't look like a glob
     if not LooksLikeGlob(arg):
       return [arg]
     if self.exec_opts.noglob:
       return [arg]
-
-    # TODO: Only try to glob if there are any glob metacharacters.
-    # Or maybe it is a conservative "avoid glob" heuristic?
-    #
-    # Non-glob but with glob characters:
-    # echo ][
-    # echo []  # empty
-    # echo []LICENSE  # empty
-    # echo [L]ICENSE  # this one is good
-    # So yeah you need to test the validity somehow.
 
     try:
       #g = glob.glob(arg)  # Bad Python glob
