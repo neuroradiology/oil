@@ -53,6 +53,14 @@ echo ${s/?xx/_yy} ${s/%?xx/_yy}
 # N-I dash status: 2
 # N-I dash stdout-json: ""
 
+### Replace char class
+s=xx_xx_xx
+echo ${s//[[:alpha:]]/y} ${s//[^[:alpha:]]/-}
+# stdout: yy_yy_yy xx-xx-xx
+# N-I mksh stdout: xx_xx_xx xx_xx_xx
+# N-I dash status: 2
+# N-I dash stdout-json: ""
+
 ### Pattern replacement ${v/} is not valid
 v=abcde
 echo -${v/}-

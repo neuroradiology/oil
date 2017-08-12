@@ -349,7 +349,7 @@ var-op-test() {
 }
 
 var-op-other() {
-  sh-spec spec/var-op-other.test.sh --osh-failures-allowed 6 \
+  sh-spec spec/var-op-other.test.sh --osh-failures-allowed 10 \
     ${REF_SHELLS[@]} $OSH "$@"
 }
 
