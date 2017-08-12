@@ -205,6 +205,12 @@ echo ok && echo hi | grep nonexistent
 # stdout: ok
 # status: 1
 
+### errexit test && -- from gen-module-init
+set -o errexit
+test "$mod" = readline && echo "#endif"
+echo status=$?
+# stdout: status=1
+
 ### errexit with !
 set -o errexit
 echo one
